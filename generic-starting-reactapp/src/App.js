@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Button } from 'reactstrap';
+import { Button, Badge } from 'reactstrap';
 
 function App() {
   return (
@@ -9,16 +9,14 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <div>
-          <Button color="success">BootstrapReactStrapButton</Button>
+          <Button color="info">A Bootstrap Button</Button>
         </div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <br /><br />
+       
+          <div>
+         <Button color="primary" outline> A Bootstrap Badge <Badge color="secondary">2</Badge></Button>
+        </div>
+        
       </header>
     </div>
   );
