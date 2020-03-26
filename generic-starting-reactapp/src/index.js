@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
