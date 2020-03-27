@@ -4,6 +4,7 @@ import './App.css';
 import { Button, Badge } from 'reactstrap';
 import ProgressExample  from './components/ProgressExample'
 import BootstrapDefaultDropdown from './components/BootstrapDefaultDropdown'
+import AClassBasedComponent from './components/AClassBasedComponent'
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
           <div>
          <Button color="primary" outline> A Bootstrap Badge <Badge color="secondary">2</Badge></Button>
         </div>
-        
+        <br /><br /><br /> <br />
+         <AClassBasedComponent />
       </header>
     </div>
   );
