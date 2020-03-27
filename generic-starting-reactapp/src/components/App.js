@@ -1,7 +1,9 @@
 import React from 'react';
 import logo from '../logo.svg';
-import './App.css';
+import './App.scss';
 import { Button, Badge } from 'reactstrap';
+
+import ChuckNorris from './chuckNorris/chuckJoke';
 
 function App() {
   return (
@@ -16,6 +18,11 @@ function App() {
        
         <div>
          <Button color="primary" outline> A Bootstrap Badge <Badge color="secondary">2</Badge></Button>
+        </div>
+        <br /><br />
+
+        <div>
+          <ChuckNorris/>
         </div>
         
       </header>
