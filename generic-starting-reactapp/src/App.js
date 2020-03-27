@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Button, Badge } from 'reactstrap';
+import ProgressExample  from './components/ProgressExample'
 
 function App() {
   return (
@@ -11,8 +12,9 @@ function App() {
         <div>
           <Button color="info">A Bootstrap Button</Button>
         </div>
-        <br /><br />
-       
+        <br /><br /> <br /><br /> <br /><br />
+           <ProgressExample />
+        <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br /><br />
           <div>
          <Button color="primary" outline> A Bootstrap Badge <Badge color="secondary">2</Badge></Button>
         </div>
