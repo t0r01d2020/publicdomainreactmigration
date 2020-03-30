@@ -27,6 +27,5 @@ class AClassBasedComponent extends Component {
    }
 
 }
-
-export default AClassBasedComponent;
 ///dont forget this export line
+export default AClassBasedComponent;

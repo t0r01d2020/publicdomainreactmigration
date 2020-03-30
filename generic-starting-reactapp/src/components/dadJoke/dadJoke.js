@@ -31,7 +31,7 @@ const dadJoke = props => {
       <div>
         {
           <div>
-            <img src={imageSrc} width='100px' height='auto' />
+            <img src={imageSrc} width='100px' height='auto' alt='homer with a brick'/>
             {
               getJokeString()
             }

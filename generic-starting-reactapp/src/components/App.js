@@ -2,9 +2,9 @@ import React from 'react';
 import logo from '../logo.svg';
 import './App.scss';
 import { Button, Badge } from 'reactstrap';
-import ProgressExample  from './components/ProgressExample'
-import BootstrapDefaultDropdown from './components/BootstrapDefaultDropdown'
-import AClassBasedComponent from './components/AClassBasedComponent'
+import ProgressExample  from './ProgressExample'
+import BootstrapDefaultDropdown from './BootstrapDefaultDropdown'
+import AClassBasedComponent from './AClassBasedComponent'
 
 import DadJoke from './dadJoke/dadJoke';
 
@@ -32,6 +32,9 @@ function App() {
         <div>
           <DadJoke/>
         </div>
+
+        <br /><br />
+        <AClassBasedComponent />
         
       </header>
     </div>
