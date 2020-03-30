@@ -1,18 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from '../logo.svg';
+import './App.scss';
 import { Button, Badge } from 'reactstrap';
 import ProgressExample  from './components/ProgressExample'
 import BootstrapDefaultDropdown from './components/BootstrapDefaultDropdown'
 import AClassBasedComponent from './components/AClassBasedComponent'
+
+import DadJoke from './dadJoke/dadJoke';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        
         <div>
-          <Button color="info">A Bootstrap Button</Button>
+          <Button color="info"> A Bootstrap Button </Button>
         </div>
         <br /><br /> <br />
           <BootstrapDefaultDropdown />
@@ -20,11 +23,16 @@ function App() {
         <br /><br /><br />
            <ProgressExample />
         <br /><br />
-          <div>
+       
+        <div>
          <Button color="primary" outline> A Bootstrap Badge <Badge color="secondary">2</Badge></Button>
         </div>
-        <br /><br /><br /> <br />
-         <AClassBasedComponent />
+        <br /><br />
+
+        <div>
+          <DadJoke/>
+        </div>
+        
       </header>
     </div>
   );
