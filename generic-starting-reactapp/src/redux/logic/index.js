@@ -1,9 +1,9 @@
 
 // import "Logic" (API connections)
-import chuckNorrisJokeSearchLogic from './silly/chucknorris';
+import dadJokeSearchLogic from './silly/dadJokeLogic';
 
 export default [ 
   
-  ...chuckNorrisJokeSearchLogic
+  ...dadJokeSearchLogic
   
 ];

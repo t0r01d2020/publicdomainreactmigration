@@ -6,9 +6,11 @@ import { Button } from 'reactstrap';
 
 import * as actions from '../../redux/actions';
 
-import './chuck.scss';
+import imageSrc from '../../assets/images/homer-simpson.jpg';
 
-const chuckJoke = props => {
+import './dad.scss';
+
+const dadJoke = props => {
 
   const getJoke = e => {
     e.preventDefault();
@@ -19,18 +21,20 @@ const chuckJoke = props => {
     return props.joke && props.joke.icon_url;
   };
 
-  const getJokeString = () => props.joke && props.joke.value;
+  const getJokeString = () => String(props.joke) !== '' && props.joke;
 
   return (
-    <div className='norrisJokeView'>
+    <div className='jokeView'>
       <div>
-        <Button className='wide' color="primary" onClick={getJoke}>Get Chuck Norris Joke</Button>
+        <Button className='wide' color="primary" onClick={getJoke}>Dad Joke!</Button>
       </div>
       <div>
         {
           <div>
-            <img src={ getJokeImage() } />
-            <span>{ getJokeString() }</span>
+            <img src={imageSrc} width='100px' height='auto' />
+            {
+              getJokeString()
+            }
           </div>
         }
       </div>
@@ -48,15 +52,15 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
-  const { norrisJoke } = state;
+  const { dadJoke } = state;
 
-  console.log('chuckJoke >> ');
-  console.log(JSON.stringify(norrisJoke));
+  console.log('dadJoke >> ');
+  console.log(JSON.stringify(dadJoke));
 
   return {
-    joke : norrisJoke.joke
+    joke : dadJoke.joke
   };
 }
 
-export { chuckJoke };
-export default connect(mapStateToProps, mapDispatchToProps)(chuckJoke);
+export { dadJoke };
+export default connect(mapStateToProps, mapDispatchToProps)(dadJoke);

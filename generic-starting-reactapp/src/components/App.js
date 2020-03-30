@@ -3,7 +3,7 @@ import logo from '../logo.svg';
 import './App.scss';
 import { Button, Badge } from 'reactstrap';
 
-import ChuckNorris from './chuckNorris/chuckJoke';
+import DadJoke from './dadJoke/dadJoke';
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <br /><br />
 
         <div>
-          <ChuckNorris/>
+          <DadJoke/>
         </div>
         
       </header>

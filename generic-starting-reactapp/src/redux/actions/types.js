@@ -1,4 +1,4 @@
 
-export const GET_CHUCK_NORRIS_RANDOM_JOKE = 'get_chuck_norris_random_joke';
-export const GET_CHUCK_NORRIS_RANDOM_JOKE_SUCCESS = 'get_chuck_norris_random_joke_success'; 
-export const GET_CHUCK_NORRIS_RANDOM_JOKE_FAILURE = 'get_chuck_norris_random_joke_failure';
+export const GET_RANDOM_DAD_JOKE = 'GET_RANDOM_DAD_JOKE';
+export const GET_RANDOM_DAD_JOKE_SUCCESS = 'GET_RANDOM_DAD_JOKE_success'; 
+export const GET_RANDOM_DAD_JOKE_FAILURE = 'GET_RANDOM_DAD_JOKE_failure';

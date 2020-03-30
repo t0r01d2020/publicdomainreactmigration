@@ -1,10 +1,10 @@
 
 import { combineReducers } from 'redux';
 
-import norrisJoke from './silly/chuckNorrisJokeReducer';
+import dadJoke from './silly/dadJokeReducer';
 
 const rootReducer = combineReducers({ 
-  norrisJoke
+  dadJoke
 });
 
 export default rootReducer;

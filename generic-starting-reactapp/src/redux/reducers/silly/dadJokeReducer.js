@@ -2,9 +2,9 @@
 
 
 import {
-  GET_CHUCK_NORRIS_RANDOM_JOKE,
-  GET_CHUCK_NORRIS_RANDOM_JOKE_SUCCESS,
-  GET_CHUCK_NORRIS_RANDOM_JOKE_FAILURE
+  GET_RANDOM_DAD_JOKE,
+  GET_RANDOM_DAD_JOKE_SUCCESS,
+  GET_RANDOM_DAD_JOKE_FAILURE
 } from '../../actions/types';
 
 const initialState = {
@@ -12,26 +12,26 @@ const initialState = {
 };
 
 // Search for customers associated with a particular vehicle
-const norrisJokeReducer = ( state = initialState, action = {payload:{}} ) => {
+const dadJokeReducer = ( state = initialState, action = {payload:{}} ) => {
 
     let newState = { ...state };
     let actionType = ( action && action.type ) || 'default';
     let responseData = action.payload || {};
 
-    console.log(`norrisJokeReducer >> ${actionType}`);
+    console.log(`dadJokeReducer >> ${actionType}`);
     console.log(action.payload);
 
     switch (actionType) {
 
-      case GET_CHUCK_NORRIS_RANDOM_JOKE:
+      case GET_RANDOM_DAD_JOKE:
         newState.joke = null;
         return newState;
         
-      case GET_CHUCK_NORRIS_RANDOM_JOKE_SUCCESS:
-        newState.joke = responseData;
+      case GET_RANDOM_DAD_JOKE_SUCCESS:
+        newState.joke = ( responseData && responseData.joke ) || null;
         return newState;
 
-      case GET_CHUCK_NORRIS_RANDOM_JOKE_FAILURE:
+      case GET_RANDOM_DAD_JOKE_FAILURE:
         newState.joke = null;
         return newState;
 
@@ -41,4 +41,4 @@ const norrisJokeReducer = ( state = initialState, action = {payload:{}} ) => {
 
 };
 
-export default norrisJokeReducer;
+export default dadJokeReducer;
