@@ -4,11 +4,15 @@ import { Component } from 'react';
 //Our components will be custom Components, extending React.Component class:
 class AClassBasedComponent extends Component {
 
+    //Inside this class, inside any class method, the passed-in props 
+    // are accessible as:   this.props
 
    //Every component you write must at least have a render() method:
    render() {
-       //it may do some presentation logic and setup here....
-       const msg = "Hello from example class-based Component";
+
+       //define a constant, get the passed-in revenue value prop...or the default value of zero:
+       const msgPrefix = "YTD Revenue: $";
+       let revenue = (this.props.revenue || "0.00");
 
        //here is one example way to style a component, in addition to using CSS style sheets
        const inlineStyleObj = {
@@ -18,10 +22,11 @@ class AClassBasedComponent extends Component {
            padding: '10px 5px 10px 5px'
        };
 
-       //then, it must return some JSX
+       //then, it must return some JSX:
+       //here, we style the div inline, and we display the string-concatenation of our 2 local vars
        return (
                  <div style={inlineStyleObj}>
-                     <h2>{msg}</h2>
+                     <h2>{msgPrefix + revenue}</h2>
                  </div>
        );
    }

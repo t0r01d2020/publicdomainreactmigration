@@ -34,7 +34,7 @@ function App() {
         </div>
 
         <br /><br />
-        <AClassBasedComponent />
+        <AClassBasedComponent revenue="12310.00" />
         
       </header>
     </div>
