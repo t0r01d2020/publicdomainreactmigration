@@ -1,0 +1,20 @@
+{
+  "name": "hapi-middleman",
+  "version": "0.0.0",
+  "description": "generic hapi server, nothing to see here folks",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Ayenohnehmouse",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/inert": "^6.0.1",
+    "@hapi/joi": "^17.1.1",
+    "axios": "^0.19.2",
+    "jest": "^25.2.0",
+    "node-polyglot": "^2.4.0"
+  }
+}
