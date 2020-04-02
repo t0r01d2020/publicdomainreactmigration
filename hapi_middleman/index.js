@@ -6,9 +6,12 @@ const Joi    = require('@hapi/joi');
 // Some built-in modules
 const fs     = require('fs');
 const Path   = require('path');
+const Good = require('@hapi/good');
+const GoodConsole = require('good-console');
 
 // PLUGINS (ROUTES)
 //const ChuckNorris = require('./plugins/chuckNorrisPlugin');
+
 
 
 // SET STATIC CONTENT PATH FROM CONFIGURATION
@@ -31,7 +34,30 @@ const serverOptions = {
   }
 };
 
-const pluginsList = [ Inert ];
+const pluginsList = [ 
+ Inert ,
+ {plugin: Good,
+  options: {
+  ops: {
+    interval: 20000
+},
+reporters: {
+  console: [{
+    module: 'good-squeeze',
+    name: 'Squeeze',
+    args: [{
+        log: '*',
+        response: '*'
+    }]
+},
+{
+    module: 'good-console'
+}, 'stdout'
+]
+    }
+   }
+ }
+];
 
 // Hapi Server Instance
 const server = new Hapi.Server(serverOptions);
@@ -69,14 +95,10 @@ const startUpTheMachine = async () => {
   // necessary to reroute for 401 errr (as it happens internally)
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;
-    console.log('server >> onPreResponse >> hook for catching errrrs');
-    // let protoPath = ( req & req.connection && req.connection.info && req.connection.info.protocol ) || '';
-    // let hostPath = ( req && req.info && req.info.host ) || '';
-    // let urlPath = ( req && req.url && req.url.path ) || '';
-    // let loggedpath = `${protoPath}://${hostPath}${urlPath}`;
-    // console.log(loggedpath);
-    // console.log('headers are >> ');
-    // console.log(req.headers);
+    //console.log('server >> onPreResponse >> hook for catching errrrs');
+      console.log("Middleman received a request. ");
+     console.log('headers are >> ');
+     console.log(req.headers);
 
     if (response.isBoom && response.output.statusCode === 401) {
       console.log(response);
