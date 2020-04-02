@@ -23,6 +23,7 @@
     "hapi-auth-cookie": "^10.0.0",
     "hapi-swaggered": "^3.1.0",
     "jest": "^25.2.0",
-    "node-polyglot": "^2.4.0"
+    "node-polyglot": "^2.4.0",
+    "redis": "^3.0.2"
   }
 }

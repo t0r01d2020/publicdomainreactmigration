@@ -12,6 +12,8 @@ const GoodConsole = require('good-console');
 const Swagger = require('hapi-swaggered');
 const Bell = require('bell');
 const AuthCookie = require('hapi-auth-cookie');
+const Redis = require('redis');
+let redisClient=null;
 
 // PLUGINS (ROUTES)
 //const ChuckNorris = require('./plugins/chuckNorrisPlugin');
@@ -119,6 +121,14 @@ const pluginsList = [
 // Hapi Server Instance
 const server = new Hapi.Server(serverOptions);
 
+const connectMiddlemanToRedis = () => {
+  console.log("Now trying to connect to Redis...");
+  // redisClient = Redis.createClient();
+  // redisClient.on('ready', function() {
+  //   console.log("RedisClient is ready");
+  // });
+};
+
 // Start up the Hapi Server Machine
 const startUpTheMachine = async () => {
 
@@ -184,6 +194,9 @@ startUpTheMachine()
     // list out all urls/methods available
     console.log('\n>> routes available >>');
     server.table().forEach((route) => console.log(`${route.method}\t${route.path}`));
+
+    console.log("Now trying to connect the Middleman to Redis")
+    connectMiddlemanToRedis();
   })
   .catch(err => {
     console.log('Error starting the machine! :^( ', err);
