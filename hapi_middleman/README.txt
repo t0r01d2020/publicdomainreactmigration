@@ -1,5 +1,19 @@
 
+To externally Ping the Hapi Middleman when it is running on a host, including your own
+localhost, you can send a HTTP GET request (e.g.: via POSTMAN, or CURL) to the following form
 
+GET to
+URL:
+
+  http://<localhost or deployed domain>:3210
+
+  be sure to plug-in the word "localhost" on your laptop, or
+  the hostname if deployed on a server.
+
+  If the Hapi Middleman is deployed properly and running, you should get an HTTP 200 status code, and get back this response as text/plain:
+    "Hapi Wednesday From Our Hapi Middleman Server!"
+
+So, its base URL ( "/") is a test endpoint.
 
 
 Our Middleman Server now logs the details of every REST request it receives, here is the example of the
