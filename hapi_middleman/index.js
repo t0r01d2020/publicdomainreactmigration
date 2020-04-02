@@ -22,6 +22,11 @@ const env = process.env;
 // DEPLOYMENT-SPECIFIC OPTIONS
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
+
+let logFileName = 'middleman_hapi_log.log';
+const logsDirPath = './__logs/';
+let fullLogfilePath = logsDirPath+logFileName;     
+
  
 // Basic server options
 const serverOptions = {
@@ -53,7 +58,21 @@ reporters: {
 {
     module: 'good-console'
 }, 'stdout'
-]
+],
+file: [{
+  module: 'good-squeeze',
+  name: 'Squeeze',
+  args: [{
+      log: '*',
+      response: '*'
+  }]
+}, {
+  module: 'good-squeeze',
+  name: 'SafeJson'
+}, {
+  module: 'good-file',
+  args: [fullLogfilePath]
+}]
     }
    }
  }

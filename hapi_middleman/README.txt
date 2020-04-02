@@ -35,3 +35,6 @@ headers are >>
   connection: 'keep-alive'
 }
 200402/022908.906, (1585794548906:DML-03259:1132:k8i5418c:10000) [response] http://0.0.0.0:3210: get / {} 200 (71ms)
+{"event":"response","timestamp":1585795689300,"id":"1585795689300:DML-03259:11740:k8i5sxtc:10000","instance":"http://0.0.0.0:3210","method":"get","path":"/","query":{},"responseTime":32,"statusCode":200,"pid":11740,"httpVersion":"1.1","route":"/","log":[],"source":{"remoteAddress":"127.0.0.1","userAgent":"PostmanRuntime/7.24.0"},"config":{}}
+{"event":"response","timestamp":1585795723143,"id":"1585795723143:DML-03259:11740:k8i5sxtc:10001","instance":"http://0.0.0.0:3210","method":"get","path":"/","query":{},"responseTime":4,"statusCode":200,"pid":11740,"httpVersion":"1.1","route":"/","log":[],"source":{"remoteAddress":"127.0.0.1","userAgent":"PostmanRuntime/7.24.0"},"config":{}}
+{"event":"response","timestamp":1585795741181,"id":"1585795741181:DML-03259:11740:k8i5sxtc:10002","instance":"http://0.0.0.0:3210","method":"get","path":"/","query":{"something":"value"},"responseTime":8,"statusCode":200,"pid":11740,"httpVersion":"1.1","route":"/","log":[],"source":{"remoteAddress":"127.0.0.1","userAgent":"PostmanRuntime/7.24.0"},"config":{}}
