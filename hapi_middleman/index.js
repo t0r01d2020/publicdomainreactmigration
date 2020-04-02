@@ -10,6 +10,8 @@ const Path = require('path');
 const Good = require('@hapi/good');
 const GoodConsole = require('good-console');
 const Swagger = require('hapi-swaggered');
+const Bell = require('bell');
+const AuthCookie = require('hapi-auth-cookie');
 
 // PLUGINS (ROUTES)
 //const ChuckNorris = require('./plugins/chuckNorrisPlugin');
