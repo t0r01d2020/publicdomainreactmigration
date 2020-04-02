@@ -48,6 +48,24 @@ const serverOptions = {
 const pluginsList = [
   Inert,
   {
+    plugin: AuthCookie,
+    options: {
+      password: 'fake-placeholder-temp', //Password used for encryption
+      cookie: 'sitepoint-auth', // Name of cookie to set
+      isSecure: false
+  }
+  },
+  {
+    plugin: Bell,
+    options: {
+      provider: 'unknown-placeholder-our-oidc-server',
+      password: 'fake-placeholder-temp', //Password used for encryption
+      clientId: 'placeholder-for-client-id',// eventually will pass this in through config
+      clientSecret: 'placeholder-for-secret',//eventually will store this elsewhere, and load it
+      isSecure: false
+    }
+  },
+  {
     plugin: Good,
     options: {
       ops: {
