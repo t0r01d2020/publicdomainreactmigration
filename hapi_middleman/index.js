@@ -27,6 +27,8 @@ const env = process.env;
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
 
+//Hardcoded Logging dir now, but we should change this later to be configurable
+//and passed-in. Same with logfile name
 let logFileName = 'middleman_hapi_log.log';
 const logsDirPath = './__logs/';
 let fullLogfilePath = logsDirPath + logFileName;
