@@ -15,10 +15,6 @@ const AuthCookie = require('hapi-auth-cookie');
 const Redis = require('redis');
 let redisClient=null;
 
-// PLUGINS (ROUTES)
-//const ChuckNorris = require('./plugins/chuckNorrisPlugin');
-
-
 
 // SET STATIC CONTENT PATH FROM CONFIGURATION
 const DEFAULT_STATIC_CONTENT_PATH = './build';
@@ -123,10 +119,21 @@ const server = new Hapi.Server(serverOptions);
 
 const connectMiddlemanToRedis = () => {
   console.log("Now trying to connect to Redis...");
-  // redisClient = Redis.createClient();
-  // redisClient.on('ready', function() {
-  //   console.log("RedisClient is ready");
-  // });
+  redisClient = Redis.createClient(
+    {
+      port      : 6379,               // replace with the port of YOUR local Redis installation
+      host      : '127.0.0.1'
+    });
+  redisClient.on('ready', function() {
+  console.log("RedisClient is ready");
+   });
+
+
+   redisClient.on('connect', function() {
+    console.log('Connected to Redis server');
+   }); 
+
+
 };
 
 // Start up the Hapi Server Machine
