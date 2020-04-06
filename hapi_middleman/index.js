@@ -249,6 +249,18 @@ startUpTheMachine()
     console.log("Now trying to connect the Middleman to Redis")
     connectMiddlemanToRedis();
 
+    if(oauthClientId == null || oauthClientId == ""){
+      const err = "The client_id is not configured in the environment variables! This is needed";
+      console.log(err);
+      throw(err);
+    }
+
+    if(oauthClientSecret == null || oauthClientSecret == ""){
+      const err = "the client_secret is not configured in the environment variables. It must be!";
+      console.log(err);
+      throw(err);
+    }
+
   })
   .catch(err => {
     console.log('Error starting the machine! :^( ', err);
