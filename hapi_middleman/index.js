@@ -1,3 +1,8 @@
+//THESE ENVIRONMENT VARS MUST BE DEFINED ON THE HOST WHICH RUNS THIS SERVER:
+//   middleman_logging_dir  : THE DIRECTORY WHERE IT SHOULD WRITE ITS LOG FILES
+//   client_id  : Its OAuth2 ClientID
+//   client_secret:  Its OAuth2 ClientSecret
+
 
 // Happy things
 const Hapi = require('@hapi/hapi');
@@ -14,6 +19,9 @@ const Bell = require('bell');
 const AuthCookie = require('hapi-auth-cookie');
 const Redis = require('redis');
 let redisClient=null;
+let logsDirPath = './__logs/';  //default value, may be replaced by env config value
+let oauthClientId=null;
+let oauthClientSecret=null;
 
 
 // SET STATIC CONTENT PATH FROM CONFIGURATION
@@ -25,10 +33,22 @@ const env = process.env;
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
 
+
+console.log("Now reading env config from environment...");
+    var envLoggingDir = env.middleman_logging_dir;
+    oauthClientId = env.client_id;
+    oauthClientSecret = env.client_secret;
+
+    if(envLoggingDir != null && envLoggingDir != ""){
+      console.log("There is an environment-specific logging dir configured: "+envLoggingDir);
+      logsDirPath = envLoggingDir;//overwrite default value w. env-config value
+    }
+    console.log("The configured oauth client_id is: "+oauthClientId);
+
+
 //Hardcoded Logging dir now, but we should change this later to be configurable
 //and passed-in. Same with logfile name
 let logFileName = 'middleman_hapi_log.log';
-const logsDirPath = './__logs/';
 let fullLogfilePath = logsDirPath + logFileName;
 
 
@@ -226,9 +246,9 @@ startUpTheMachine()
     // list out all urls/methods available
     console.log('\n>> routes available >>');
     server.table().forEach((route) => console.log(`${route.method}\t${route.path}`));
-
     console.log("Now trying to connect the Middleman to Redis")
     connectMiddlemanToRedis();
+
   })
   .catch(err => {
     console.log('Error starting the machine! :^( ', err);
