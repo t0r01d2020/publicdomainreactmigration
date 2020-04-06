@@ -165,6 +165,31 @@ const startUpTheMachine = async () => {
     }
   });
 
+  server.route({
+    path: '/user/details',
+    method: 'GET',
+    handler: (request, h) => {
+      const accessToken = request.headers['fake-cookieplaceholder'];
+      if(accessToken == null || accessToken === ""){
+        return 'Required security header missing';
+      }
+
+      let uprofile= "";
+      redisClient.hgetall(accessToken.toString('utf8'), function(err, userObject){
+        if (err) {
+          console.error('Unable to retrieve User details from Redis: ' + err);
+          return 'Unable to retrieve User details from Redis: '+err;
+         }
+         console.log("Seemed to have gotten the User details: ");
+         console.log(userObject);
+         uprofile = ""+ userObject
+        
+      })
+
+      return h.response(uprofile);
+    }
+  });
+
 
   // necessary to reroute for 401 errr (as it happens internally)
   server.ext('onPreResponse', (req, h) => {
