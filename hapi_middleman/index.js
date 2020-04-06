@@ -212,10 +212,10 @@ const startUpTheMachine = async () => {
           console.error(err);
           return ('Error: '+err);
         }
-        storeResponse =  ""+response;
+        storeResponse =  {status: "success"};
       });
 
-      return storeResponse;
+      return h.response(storeResponse).code(200);
     }
   });
 
