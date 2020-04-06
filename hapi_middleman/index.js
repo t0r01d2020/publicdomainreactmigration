@@ -8,6 +8,7 @@
 const Hapi = require('@hapi/hapi');
 const Inert = require('@hapi/inert');
 const Joi = require('@hapi/joi');
+const Hoek = require('@hapi/hoek');
 // Some built-in modules
 const fs = require('fs');
 const Path = require('path');
@@ -182,6 +183,36 @@ const startUpTheMachine = async () => {
     method: 'GET',
     handler: (request, h) => {
       return '                           Hapi Wednesday From Our Hapi Middleman Server!';
+    }
+  });
+
+  server.route({
+    path: '/user/auth/saveoidctoken',
+    method: 'POST',
+    handler: (request, h) => {
+      let username = request.payload.username;
+      if(username == null || username == ""){
+        console.error("Received a bad request to saveoidctoken: username param was missing!");
+        return 'Error: the username parameter is required.';
+      }
+      console.log("Received this posted username: "+username);
+      let postedtoken = request.payload.oidc_token;
+      if(postedtoken == null || postedtoken == ''){
+        console.error("There was no token posted in the request!");
+        return 'Error: there was no oidc token posted in the request';
+      }
+      console.log("Received this posted accesstoken: "+postedtoken);
+      //now, save this tuple to the Redis database
+      let storeResponse=null;
+      redisClient.hmset(username, "username", username, "accesstoken",postedtoken, function(err, response){
+        if(err != null){
+          console.error(err);
+          return ('Error: '+err);
+        }
+        storeResponse =  ""+response;
+      });
+
+      return storeResponse;
     }
   });
 
