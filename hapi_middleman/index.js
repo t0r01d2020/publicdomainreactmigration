@@ -186,6 +186,9 @@ const startUpTheMachine = async () => {
     }
   });
 
+  /**
+   * OAuth callback can POST a new access token here, to save it to Redis, associate it to a username
+   */
   server.route({
     path: '/user/auth/saveoidctoken',
     method: 'POST',
@@ -201,7 +204,7 @@ const startUpTheMachine = async () => {
         console.error("There was no token posted in the request!");
         return 'Error: there was no oidc token posted in the request';
       }
-      console.log("Received this posted accesstoken: "+postedtoken);
+     
       //now, save this tuple to the Redis database
       let storeResponse=null;
       redisClient.hmset(username, "username", username, "accesstoken",postedtoken, function(err, response){
