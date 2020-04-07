@@ -39,13 +39,15 @@ console.log("Now reading env config from environment...");
     var envLoggingDir = env.middleman_logging_dir;
     oauthClientId = env.client_id;
     oauthClientSecret = env.client_secret;
+    const REDIS_HOST = env.middleman_redis_host || '127.0.0.1';
+    const REDIS_PORT = env.middleman_redis_port || '6379';
 
     if(envLoggingDir != null && envLoggingDir != ""){
       console.log("There is an environment-specific logging dir configured: "+envLoggingDir);
       logsDirPath = envLoggingDir;//overwrite default value w. env-config value
     }
     console.log("The configured oauth client_id is: "+oauthClientId);
-
+    console.log("Using a Redis-config of: { host: "+REDIS_HOST+", port: "+REDIS_PORT+" }");
 
 //Hardcoded Logging dir now, but we should change this later to be configurable
 //and passed-in. Same with logfile name
@@ -142,8 +144,8 @@ const connectMiddlemanToRedis = () => {
   console.log("Now trying to connect to Redis...");
   redisClient = Redis.createClient(
     {
-      port      : 6379,               // replace with the port of YOUR local Redis installation
-      host      : '127.0.0.1'
+      host      : REDIS_HOST,
+      port      : REDIS_PORT  // replace with the port of YOUR local Redis installation
     });
   redisClient.on('ready', function() {
   console.log("RedisClient is ready");
@@ -239,13 +241,10 @@ const startUpTheMachine = async () => {
           return 'Unable to retrieve oidc token from Redis: '+err;
          }
          console.log("loaded the session oidc token from Redis: ");  ///delete this before commit
-         console.log("the raw result is: "+result);
-         accesstoken= result.toString();
+         accesstoken= result;
+         console.log("the raw result is: "+accesstoken);
       })
-      const response = h.response((accesstoken+''));
-      response.code(200);
-      response.header('Content-Type', 'text/plain');
-      return response;
+         return 'result: '+accesstoken;
     }
   });
 
