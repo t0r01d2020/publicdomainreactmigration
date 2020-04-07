@@ -219,28 +219,33 @@ const startUpTheMachine = async () => {
     }
   });
 
+  /**
+   * This route presumes you have a Redis Server running that has an access token Hashmap indexed by 
+   * the values contained in fake-cookie-placeholder
+   */
   server.route({
-    path: '/user/details',
+    path: '/user/auth/getoidctoken',
     method: 'GET',
     handler: (request, h) => {
-      const accessToken = request.headers['fake-cookieplaceholder'];
-      if(accessToken == null || accessToken === ""){
-        return 'Required security header missing';
+      const cookiePlaceholder = request.headers['fake-cookie-placeholder'];
+      if(cookiePlaceholder == null || cookiePlaceholder == ""){
+        return 'Required cookie missing';
       }
 
-      let uprofile= "";
-      redisClient.hgetall(accessToken.toString('utf8'), function(err, userObject){
+      let accesstoken= "";
+      redisClient.hget(cookiePlaceholder, "accesstoken", function(err, result){
         if (err) {
-          console.error('Unable to retrieve User details from Redis: ' + err);
-          return 'Unable to retrieve User details from Redis: '+err;
+          console.error('Unable to retrieve the oidc token from Redis: ' + err);
+          return 'Unable to retrieve oidc token from Redis: '+err;
          }
-         console.log("Seemed to have gotten the User details: ");
-         console.log(userObject);
-         uprofile = ""+ userObject
-        
+         console.log("loaded the session oidc token from Redis: ");  ///delete this before commit
+         console.log("the raw result is: "+result);
+         accesstoken= result.toString();
       })
-
-      return h.response(uprofile);
+      const response = h.response((accesstoken+''));
+      response.code(200);
+      response.header('Content-Type', 'text/plain');
+      return response;
     }
   });
 
