@@ -39,9 +39,9 @@ const env = process.env;
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
 
-redisService.get = function(hashkey, field){
+redisService.read = function(hashkey, field){
   return new Promise(function (resolve, reject) {
-      console.log("RedisService.get() invoked...now doing an async REDIS hget operation");
+      console.log("RedisService.read() invoked...now doing an async REDIS hget operation");
       redisClient.hget(hashkey, field, function(err,result){
           if (err) {
               return reject(err);
@@ -51,6 +51,22 @@ redisService.get = function(hashkey, field){
   });
 
 };
+
+redisService.store = function(hashkey, fieldname, fieldvalue){
+  return new Promise(function (resolve, reject) {
+      if(typeof fieldvalue == 'undefined') {
+          return reject('  RedisService: The fieldvalue is empty/undefined');
+      }
+      redisClient.hmset(hashkey, fieldname, fieldvalue, function(err, result){
+          if (err) {
+              return reject(err);
+          }
+          console.log("Inside the RedisService, redis returns on store success, this result: "+result);
+          return resolve(result);
+      });
+  });
+};
+
 
 console.log("Now reading env config from environment...");
     var envLoggingDir = env.middleman_logging_dir;
@@ -211,29 +227,21 @@ const startUpTheMachine = async () => {
     path: '/user/auth/saveoidctoken',
     method: 'POST',
     handler: (request, h) => {
-      let username = request.payload.username;
-      if(username == null || username == ""){
+      let cookieHashkey = request.payload.cookie_hashkey;
+      if(cookieHashkey == null || cookieHashkey == ""){
         console.error("Received a bad request to saveoidctoken: username param was missing!");
         return 'Error: the username parameter is required.';
       }
-      console.log("Received this posted username: "+username);
-      let postedtoken = request.payload.oidc_token;
+      console.log("Received this posted cookie Hashkey: "+cookieHashkey);
+      let postedtoken = request.payload.oauth_access_token;
       if(postedtoken == null || postedtoken == ''){
         console.error("There was no token posted in the request!");
         return 'Error: there was no oidc token posted in the request';
       }
-     
-      //now, save this tuple to the Redis database
       let storeResponse=null;
-      redisClient.hmset(username, "username", username, "accesstoken",postedtoken, function(err, response){
-        if(err != null){
-          console.error(err);
-          return ('Error: '+err);
-        }
-        storeResponse =  {status: "success"};
-      });
-
-      return h.response(storeResponse).code(200);
+       //now, save this tuple to the Redis database 
+      storeResponse = redisService.store(cookieHashkey, "accesstoken", postedtoken);
+      return storeResponse;
     }
   });
 
@@ -252,7 +260,7 @@ const startUpTheMachine = async () => {
         return 'Required cookie missing';
       }
      let promiseResult=null;
-     promiseResult = redisService.get(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
+     promiseResult = redisService.read(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
      console.log("Got a result from the new RedisService (promise): "+promiseResult);
      return promiseResult; 
     }
