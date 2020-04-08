@@ -1,7 +1,11 @@
 //THESE ENVIRONMENT VARS MUST BE DEFINED ON THE HOST WHICH RUNS THIS SERVER:
-//   middleman_logging_dir  : THE DIRECTORY WHERE IT SHOULD WRITE ITS LOG FILES
 //   client_id  : Its OAuth2 ClientID
 //   client_secret:  Its OAuth2 ClientSecret
+
+//AND, THESE ENVIRONMENT VARS ARE OPTIONAL: THEY CAN BE SET TO OVERRIDE DEFAULT, HARDCODED VALUES:
+//    middleman_logging_dir  : THE DIRECTORY WHERE IT SHOULD WRITE ITS LOG FILES
+//    middleman_redis_host   : IP address or Hostname of the Redis Server
+//    middleman_redis_port   : Port number of the Redis Server
 
 
 // Happy things
@@ -20,6 +24,7 @@ const Bell = require('bell');
 const AuthCookie = require('hapi-auth-cookie');
 const Redis = require('redis');
 let redisClient=null;
+let redisService= {};
 let logsDirPath = './__logs/';  //default value, may be replaced by env config value
 let oauthClientId=null;
 let oauthClientSecret=null;
@@ -34,6 +39,18 @@ const env = process.env;
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
 
+redisService.get = function(hashkey, field){
+  return new Promise(function (resolve, reject) {
+      console.log("RedisService.get() invoked...now doing an async REDIS hget operation");
+      redisClient.hget(hashkey, field, function(err,result){
+          if (err) {
+              return reject(err);
+          }
+          return resolve(result);
+      });
+  });
+
+};
 
 console.log("Now reading env config from environment...");
     var envLoggingDir = env.middleman_logging_dir;
@@ -49,8 +66,7 @@ console.log("Now reading env config from environment...");
     console.log("The configured oauth client_id is: "+oauthClientId);
     console.log("Using a Redis-config of: { host: "+REDIS_HOST+", port: "+REDIS_PORT+" }");
 
-//Hardcoded Logging dir now, but we should change this later to be configurable
-//and passed-in. Same with logfile name
+
 let logFileName = 'middleman_hapi_log.log';
 let fullLogfilePath = logsDirPath + logFileName;
 
@@ -222,29 +238,23 @@ const startUpTheMachine = async () => {
   });
 
   /**
+   * Use the hashkey from the Session cookie to retrieve the stored OAuth2 access token
    * This route presumes you have a Redis Server running that has an access token Hashmap indexed by 
-   * the values contained in fake-cookie-placeholder
+   * the values contained in fake-cookie-placeholder.
+   * It also assumes the Request bears a session-scoped hashkey from the cookie.
    */
   server.route({
-    path: '/user/auth/getoidctoken',
+    path: '/user/auth/get_user_accesstoken',
     method: 'GET',
-    handler: (request, h) => {
+    handler: async (request, h) => {
       const cookiePlaceholder = request.headers['fake-cookie-placeholder'];
       if(cookiePlaceholder == null || cookiePlaceholder == ""){
         return 'Required cookie missing';
       }
-
-      let accesstoken= "";
-      redisClient.hget(cookiePlaceholder, "accesstoken", function(err, result){
-        if (err) {
-          console.error('Unable to retrieve the oidc token from Redis: ' + err);
-          return 'Unable to retrieve oidc token from Redis: '+err;
-         }
-         console.log("loaded the session oidc token from Redis: ");  ///delete this before commit
-         accesstoken= result;
-         console.log("the raw result is: "+accesstoken);
-      })
-         return 'result: '+accesstoken;
+     let promiseResult=null;
+     promiseResult = redisService.get(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
+     console.log("Got a result from the new RedisService (promise): "+promiseResult);
+     return promiseResult; 
     }
   });
 
