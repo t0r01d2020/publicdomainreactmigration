@@ -21,12 +21,11 @@ const GoodConsole = require('good-console');
 const Swagger = require('hapi-swaggered');
 const Bell = require('bell');
 const AuthCookie = require('hapi-auth-cookie');
-const Redis = require('redis');
-let redisClient=null;
-let redisService= {};
+const RedisProvider = require('./providers/RedisProvider');
 let logsDirPath = './__logs/';  //default value, may be replaced by env config value
 let oauthClientId=null;
 let oauthClientSecret=null;
+
 
 
 // SET STATIC CONTENT PATH FROM CONFIGURATION
@@ -37,35 +36,6 @@ const env = process.env;
 // DEPLOYMENT-SPECIFIC OPTIONS
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
-
-
-redisService.read = function(hashkey, field){
-  return new Promise(function (resolve, reject) {
-      console.log("RedisService.read() invoked...now doing an async REDIS hget operation");
-      redisClient.hget(hashkey, field, function(err,result){
-          if (err) {
-              return reject(err);
-          }
-          return resolve(result);
-      });
-  });
-
-};
-
-redisService.store = function(hashkey, fieldname, fieldvalue){
-  return new Promise(function (resolve, reject) {
-      if(typeof fieldvalue == 'undefined') {
-          return reject('  RedisService: The fieldvalue is empty/undefined');
-      }
-      redisClient.hmset(hashkey, fieldname, fieldvalue, function(err, result){
-          if (err) {
-              return reject(err);
-          }
-          console.log("Inside the RedisService, redis returns on store success, this result: "+result);
-          return resolve(result);
-      });
-  });
-};
 
 
 console.log("Now reading env config from environment...");
@@ -83,7 +53,7 @@ console.log("Now reading env config from environment...");
     console.log("Using a Redis-config of: { host: "+REDIS_HOST+", port: "+REDIS_PORT+" }");
 
 
-let logFileName = 'middleman_hapi_log.log';
+let logFileName = 'middleman_hapi_log_'+(new Date().getTime())+'.log';
 let fullLogfilePath = logsDirPath + logFileName;
 
 
@@ -173,22 +143,12 @@ const pluginsList = [
 const server = new Hapi.Server(serverOptions);
 
 const connectMiddlemanToRedis = () => {
-  console.log("Now trying to connect to Redis...");
-  redisClient = Redis.createClient(
-    {
-      host      : REDIS_HOST,
-      port      : REDIS_PORT  // replace with the port of YOUR local Redis installation
-    });
-  redisClient.on('ready', function() {
-  console.log("RedisClient is ready");
-   });
+  redisConfig = {
+    host      : REDIS_HOST,
+    port      : REDIS_PORT  // replace with the port of YOUR local Redis installation
+  };
 
-
-   redisClient.on('connect', function() {
-    console.log('Connected to Redis server');
-   }); 
-
-
+  RedisProvider.connect(redisConfig);
 };
 
 // Start up the Hapi Server Machine
@@ -240,7 +200,7 @@ const startUpTheMachine = async () => {
       }
       let storeResponse=null;
        //now, save this tuple to the Redis database 
-      storeResponse = redisService.store(cookieHashkey, "accesstoken", postedtoken);
+      storeResponse = RedisProvider.store(cookieHashkey, "accesstoken", postedtoken);
       return storeResponse;
     }
   });
@@ -260,9 +220,9 @@ const startUpTheMachine = async () => {
         return 'Required cookie missing';
       }
      let promiseResult=null;
-     promiseResult = redisService.read(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
+     promiseResult = await RedisProvider.read(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
      console.log("Got a result from the new RedisService (promise): "+promiseResult);
-     return promiseResult; 
+     return '{ "accesstoken": "'+promiseResult+'" }'; 
     }
   });
 
