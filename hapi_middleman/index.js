@@ -44,7 +44,7 @@ LOGGER.level = 'debug';
 
 redisService.read = function(hashkey, field){
   return new Promise(function (resolve, reject) {
-      console.log("RedisService.read() invoked...now doing an async REDIS hget operation");
+      LOGGER.info("RedisService.read() invoked...now doing an async REDIS hget operation");
       redisClient.hget(hashkey, field, function(err,result){
           if (err) {
               return reject(err);
@@ -64,14 +64,14 @@ redisService.store = function(hashkey, fieldname, fieldvalue){
           if (err) {
               return reject(err);
           }
-          console.log("Inside the RedisService, redis returns on store success, this result: "+result);
+          LOGGER.info("Inside the RedisService, redis returns on store success, this result: "+result);
           return resolve(result);
       });
   });
 };
 
 
-console.log("Now reading env config from environment...");
+LOGGER.info("Now reading env config from environment...");
     var envLoggingDir = env.middleman_logging_dir;
     oauthClientId = env.client_id;
     oauthClientSecret = env.client_secret;
@@ -79,11 +79,11 @@ console.log("Now reading env config from environment...");
     const REDIS_PORT = env.middleman_redis_port || '6379';
 
     if(envLoggingDir != null && envLoggingDir != ""){
-      console.log("There is an environment-specific logging dir configured: "+envLoggingDir);
+      LOGGER.info("There is an environment-specific logging dir configured: "+envLoggingDir);
       logsDirPath = envLoggingDir;//overwrite default value w. env-config value
     }
-    console.log("The configured oauth client_id is: "+oauthClientId);
-    console.log("Using a Redis-config of: { host: "+REDIS_HOST+", port: "+REDIS_PORT+" }");
+    LOGGER.info("The configured oauth client_id is: "+oauthClientId);
+    LOGGER.info("Using a Redis-config of: { host: "+REDIS_HOST+", port: "+REDIS_PORT+" }");
 
 
 let logFileName = 'middleman_hapi_log.log';
@@ -162,19 +162,19 @@ const pluginsList = [
 const server = new Hapi.Server(serverOptions);
 
 const connectMiddlemanToRedis = () => {
-  console.log("Now trying to connect to Redis...");
+  LOGGER.info("Now trying to connect to Redis...");
   redisClient = Redis.createClient(
     {
       host      : REDIS_HOST,
       port      : REDIS_PORT  // replace with the port of YOUR local Redis installation
     });
   redisClient.on('ready', function() {
-  console.log("RedisClient is ready");
+  LOGGER.info("RedisClient is ready");
    });
 
 
    redisClient.on('connect', function() {
-    console.log('Connected to Redis server');
+    LOGGER.info('Connected to Redis server');
    }); 
 
 
@@ -221,7 +221,7 @@ const startUpTheMachine = async () => {
         console.error("Received a bad request to saveoidctoken: username param was missing!");
         return 'Error: the username parameter is required.';
       }
-      console.log("Received this posted cookie Hashkey: "+cookieHashkey);
+      LOGGER.info("Received this posted cookie Hashkey: "+cookieHashkey);
       let postedtoken = request.payload.oauth_access_token;
       if(postedtoken == null || postedtoken == ''){
         console.error("There was no token posted in the request!");
@@ -250,7 +250,7 @@ const startUpTheMachine = async () => {
       }
      let promiseResult=null;
      promiseResult = redisService.read(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
-     console.log("Got a result from the new RedisService (promise): "+promiseResult);
+     LOGGER.info("Got a result from the new RedisService (promise): "+promiseResult);
      return promiseResult; 
     }
   });
@@ -259,20 +259,20 @@ const startUpTheMachine = async () => {
   // necessary to reroute for 401 errr (as it happens internally)
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;
-    //console.log('server >> onPreResponse >> hook for catching errrrs');
-    console.log("Middleman received a request. ");
-    console.log('headers are >> ');
-    console.log(req.headers);
+    //LOGGER.info('server >> onPreResponse >> hook for catching errrrs');
+    LOGGER.info("Middleman received a request. ");
+    LOGGER.info('headers are >> ');
+    LOGGER.info(req.headers);
 
     if (response.isBoom && response.output.statusCode === 401) {
-      console.log(response);
-      console.log('onPreResponse >> returning 401');
+      LOGGER.warn(response);
+      LOGGER.warn('onPreResponse >> returning 401');
       return h.response('ERROR - 404');
     }
 
     if (response.isBoom && response.output.statusCode === 404) {
-      console.log(response);
-      console.log('onPreResponse >> returning 404');
+      LOGGER.warn(response);
+      LOGGER.warn('onPreResponse >> returning 404');
       return h.response('ERROR - 404');
     }
 
@@ -280,7 +280,7 @@ const startUpTheMachine = async () => {
   });
 
   await server.start();
-  console.log('The machine is running:', JSON.stringify(server.info, null, 1));
+  LOGGER.info('The machine is running:', JSON.stringify(server.info, null, 1));
 
 };
 
@@ -289,25 +289,25 @@ const startUpTheMachine = async () => {
 startUpTheMachine()
   .then(() => {
     // list out all urls/methods available
-    console.log('\n>> routes available >>');
-    server.table().forEach((route) => console.log(`${route.method}\t${route.path}`));
-    console.log("Now trying to connect the Middleman to Redis")
+    LOGGER.info('\n>> routes available >>');
+    server.table().forEach((route) => LOGGER.info(`${route.method}\t${route.path}`));
+    LOGGER.info("Now trying to connect the Middleman to Redis")
     connectMiddlemanToRedis();
 
     if(oauthClientId == null || oauthClientId == ""){
       const err = "The client_id is not configured in the environment variables! This is needed";
-      console.log(err);
+     LOGGER.error(err);
       throw(err);
     }
 
     if(oauthClientSecret == null || oauthClientSecret == ""){
       const err = "the client_secret is not configured in the environment variables. It must be!";
-      console.log(err);
+      LOGGER.error(err);
       throw(err);
     }
 
   })
   .catch(err => {
-    console.log('Error starting the machine! :^( ', err);
+    LOGGER.error('Error starting the machine! :^( ', err);
   });
 
