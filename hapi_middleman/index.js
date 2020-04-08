@@ -16,7 +16,7 @@ const Hoek = require('@hapi/hoek');
 // Some built-in modules
 const fs = require('fs');
 const Path = require('path');
-
+const Log4js = require('log4js');
 const Good = require('@hapi/good');
 const GoodConsole = require('good-console');
 const Swagger = require('hapi-swaggered');
@@ -38,6 +38,9 @@ const env = process.env;
 // DEPLOYMENT-SPECIFIC OPTIONS
 const static_content_path = env.STATIC_CONTENT_PATH || DEFAULT_STATIC_CONTENT_PATH;
 const context_path = env.CONTEXT_PATH || DEFAULT_CONTEXT_PATH;
+
+const LOGGER = Log4js.getLogger();
+LOGGER.level = 'debug';
 
 redisService.read = function(hashkey, field){
   return new Promise(function (resolve, reject) {
@@ -136,21 +139,7 @@ const pluginsList = [
         {
           module: 'good-console'
         }, 'stdout'
-        ],
-        file: [{
-          module: 'good-squeeze',
-          name: 'Squeeze',
-          args: [{
-            log: '*',
-            response: '*'
-          }]
-        }, {
-          module: 'good-squeeze',
-          name: 'SafeJson'
-        }, {
-          module: 'good-file',
-          args: [fullLogfilePath]
-        }]
+        ]
       }
     }
   },
