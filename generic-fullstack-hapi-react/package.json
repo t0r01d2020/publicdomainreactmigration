@@ -3,25 +3,48 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/good": "^9.0.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/hoek": "9.0.4",
+    "@hapi/inert": "^6.0.1",
+    "@hapi/joi": "^17.1.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "bell": "^10.0.0",
     "bootstrap": "^4.4.1",
+    "dotenv": "^8.2.0",
+    "good": "^8.1.2",
+    "good-console": "^8.0.0",
+    "hapi-auth-cookie": "^10.0.0",
+    "hapi-swaggered": "^3.1.0",
+    "log4js": "^6.1.2",
+    "node-polyglot": "^2.4.0",
     "node-sass": "^4.13.1",
+    "object-hash": "^2.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.1",
     "reactstrap": "^8.4.1",
+    "redis": "^3.0.2",
     "redux": "^4.0.5",
     "redux-logic": "^2.1.1"
+  },
+  "devDependencies": {
+    "ttab": "^0.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "middleman":"node ./hapi_middleman/index.js",
+    "redis": "ttab redis-server /usr/local/etc/redis.conf",
+    "runningMiddleman": "ttab yarn middleman",
+    "server": "yarn redis && yarn runningMiddleman"
   },
   "eslintConfig": {
     "extends": "react-app"

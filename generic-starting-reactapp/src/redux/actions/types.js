@@ -1,4 +1,0 @@
-
-export const GET_RANDOM_DAD_JOKE = 'GET_RANDOM_DAD_JOKE';
-export const GET_RANDOM_DAD_JOKE_SUCCESS = 'GET_RANDOM_DAD_JOKE_success'; 
-export const GET_RANDOM_DAD_JOKE_FAILURE = 'GET_RANDOM_DAD_JOKE_failure';

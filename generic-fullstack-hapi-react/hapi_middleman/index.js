@@ -142,15 +142,77 @@ const getToken = (id, fieldname) => {
 const startUpTheMachine = async () => {
 
   // register the final plugin list (routes) based on application access
-await server.register(pluginsList);
+  await server.register(pluginsList);
+
+    /**
+   * OAuth callback can POST a new access token here, to save it to Redis, associate it to a username
+   */
+  server.route({
+    path: '/user/auth/saveoidctoken',
+    method: 'POST',
+    handler: (request, h) => {
+      let cookieHashkey = request.payload.cookie_hashkey;
+      if(cookieHashkey == null || cookieHashkey == ""){
+        logger.error("Received an unauthorized request to saveoidctoken: missing required cookie!");
+        return Boom.unauthorized('Error: Request is not authorized');
+      }
+      logger.info("Received this posted cookie Hashkey: "+cookieHashkey);
+      let postedtoken = request.payload.oauth_access_token;
+      if(postedtoken == null || postedtoken == ''){
+        logger.error("There was no token posted in the request!");
+        return Boom.badRequest('Error: there was no token posted in the request');
+      }
+      let storeResponse=null;
+       //now, save this tuple to the Redis database 
+      storeResponse = RedisProvider.store(cookieHashkey, "accesstoken", postedtoken);
+      return storeResponse;
+    }
+  });
+
+  /**
+   * Use the hashkey from the Session cookie to retrieve the stored OAuth2 access token
+   * This route presumes you have a Redis Server running that has an access token Hashmap indexed by 
+   * the values contained in fake-cookie-placeholder.
+   * It also assumes the Request bears a session-scoped hashkey from the cookie.
+   */
+  server.route({
+    path: '/user/auth/get_user_accesstoken',
+    method: 'GET',
+    handler: async (request, h) => {
+      const cookiePlaceholder = request.headers['fake-cookie-placeholder'];
+      if(cookiePlaceholder == null || cookiePlaceholder == ""){
+        return Boom.unauthorized('Error: Unauthorized Request.');
+      }
+     let promiseResult=null;
+     promiseResult = await RedisProvider.read(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
+     logger.info("Got a result from the new RedisService (promise): "+promiseResult);
+     return '{ "accesstoken": "'+promiseResult+'" }'; 
+    }
+  });
+
+
+
+  // define static content handling (React SPA)
+  server.route({
+    method: 'GET',
+    path: `${context_path}{param*}`,
+    config: {
+      handler: {
+        directory: {
+          path: `.`,
+          redirectToSlash: true
+        }
+      }
+    }
+  });
 
   // oidc provider authorization settings
-server.auth.strategy('oidcOGProvider', 'bell', {
-  provider: 'oidcOGProvider',
-    password: config.OIDC_SESSION_PASSWORD,
-    isSecure: false,
-    clientId  : config.OIDC_CLIENT_ID,
-    clientSecret : config.OIDC_CLIENT_SECRET
+  server.auth.strategy('oidcOGProvider', 'bell', {
+    provider: 'oidcOGProvider',
+      password: config.OIDC_SESSION_PASSWORD,
+      isSecure: false,
+      clientId  : config.OIDC_CLIENT_ID,
+      clientSecret : config.OIDC_CLIENT_SECRET
   });
 
   // login route for OIDC!
@@ -223,23 +285,7 @@ server.auth.strategy('oidcOGProvider', 'bell', {
       auth: 'oidcOGProvider'
     }
   });
-
-  // define static content handling (React SPA)
-  /* turn this off for now
-  server.route({
-    method: 'GET',
-    path: `${context_path}{param*}`,
-    config: {
-      handler: {
-        directory: {
-          path: `.`,
-          redirectToSlash: true
-        }
-      }
-    }
-  });
-  */
-
+ 
   // cookie session configuration
   server.auth.strategy( 'session', 'cookie', { 
     cookie: {
@@ -258,11 +304,13 @@ server.auth.strategy('oidcOGProvider', 'bell', {
 
   // session is set as the default authorization method, all routes defined after this are subject to this
   server.auth.default('session');
+  // routes defined after the 'default' auth strategy will fall under that strategy
+
 
   // routes protected by various authorization mechanisms
   server.route({
     method: 'GET',
-    path: '/{param*}',
+    path: `${context_path}user`,
     handler: (request, h) => {
       
       let { firstName='', lastName='', email='', hashId } = request.auth.credentials;
@@ -270,63 +318,22 @@ server.auth.strategy('oidcOGProvider', 'bell', {
       return getToken(hashId, 'access_token')
         .then( access_token => {
           return getUserDetailsByEmailId({ access_token, email } )
-          .then( responseData => {
-            let stringifiedData = JSON.stringify(responseData, null, 1);
+          .then( data => {
+            // let stringifiedData = JSON.stringify(data, null, 1);
+            return {
+              firstName, lastName, email, data
+            }
+            /*
             return h.response(
               '<div>' + `Hooray ${firstName} ${lastName}!<br/>You made it.<br/>Here are the details for ${email}.<br/>` + '</div><br/><pre>' + stringifiedData + '</pre>'
             );
+            */
           })
-          .catch(err => {
-            return h.response('<div>' + `Boo ${firstName} ${lastName}!<br/><br/>Not able to obtain details for ${email}.<br/>` + '</div>');
+          .catch( err => {
+            return { firstName, lastName, email };
+            // return h.response('<div>' + `Boo ${firstName} ${lastName}!<br/><br/>Not able to obtain details for ${email}.<br/>` + '</div>');
           });
         });
-    }
-  });
-
-
-  /**
-   * OAuth callback can POST a new access token here, to save it to Redis, associate it to a username
-   */
-  server.route({
-    path: '/user/auth/saveoidctoken',
-    method: 'POST',
-    handler: (request, h) => {
-      let cookieHashkey = request.payload.cookie_hashkey;
-      if(cookieHashkey == null || cookieHashkey == ""){
-        logger.error("Received an unauthorized request to saveoidctoken: missing required cookie!");
-        return Boom.unauthorized('Error: Request is not authorized');
-      }
-      logger.info("Received this posted cookie Hashkey: "+cookieHashkey);
-      let postedtoken = request.payload.oauth_access_token;
-      if(postedtoken == null || postedtoken == ''){
-        logger.error("There was no token posted in the request!");
-        return Boom.badRequest('Error: there was no token posted in the request');
-      }
-      let storeResponse=null;
-       //now, save this tuple to the Redis database 
-      storeResponse = RedisProvider.store(cookieHashkey, "accesstoken", postedtoken);
-      return storeResponse;
-    }
-  });
-
-  /**
-   * Use the hashkey from the Session cookie to retrieve the stored OAuth2 access token
-   * This route presumes you have a Redis Server running that has an access token Hashmap indexed by 
-   * the values contained in fake-cookie-placeholder.
-   * It also assumes the Request bears a session-scoped hashkey from the cookie.
-   */
-  server.route({
-    path: '/user/auth/get_user_accesstoken',
-    method: 'GET',
-    handler: async (request, h) => {
-      const cookiePlaceholder = request.headers['fake-cookie-placeholder'];
-      if(cookiePlaceholder == null || cookiePlaceholder == ""){
-        return Boom.unauthorized('Error: Unauthorized Request.');
-      }
-     let promiseResult=null;
-     promiseResult = await RedisProvider.read(cookiePlaceholder, "accesstoken");  //The Promise lives inside redisService
-     logger.info("Got a result from the new RedisService (promise): "+promiseResult);
-     return '{ "accesstoken": "'+promiseResult+'" }'; 
     }
   });
 
@@ -342,7 +349,7 @@ server.auth.strategy('oidcOGProvider', 'bell', {
     if (response.isBoom && response.output.statusCode === 401) {
       logger.info(response);
       logger.info('onPreResponse >> returning 401');
-      return h.response('ERROR - 404');
+      return h.response('ERROR - 401');
     }
 
     if (response.isBoom && response.output.statusCode === 404) {

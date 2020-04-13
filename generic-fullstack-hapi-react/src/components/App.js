@@ -7,6 +7,7 @@ import BootstrapDefaultDropdown from './BootstrapDefaultDropdown'
 import AClassBasedComponent from './AClassBasedComponent'
 
 import DadJoke from './dadJoke/dadJoke';
+import UserInfo from './userInfo/userInfo';
 
 function App() {
   return (
@@ -23,15 +24,15 @@ function App() {
         <br /><br /><br />
            <ProgressExample />
         <br /><br />
+
+        <div>
+          <UserInfo/>
+        </div>
        
         <div>
          <Button color="primary" outline> A Bootstrap Badge <Badge color="secondary">2</Badge></Button>
         </div>
         <br /><br />
-
-        <div>
-          <DadJoke/>
-        </div>
 
         <br /><br />
         <AClassBasedComponent revenue="12310.00" />
