@@ -1,0 +1,31 @@
+{
+  "name": "hapi-middleman",
+  "version": "0.0.0",
+  "description": "generic hapi server, nothing to see here folks",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Ayenohnehmouse",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/good": "^9.0.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/hoek": "9.0.4",
+    "@hapi/inert": "^6.0.1",
+    "@hapi/joi": "^17.1.1",
+    "axios": "^0.19.2",
+    "bell": "^10.0.0",
+    "dotenv": "^8.2.0",
+    "good": "^8.1.2",
+    "good-console": "^8.0.0",
+    "hapi-auth-cookie": "^10.0.0",
+    "hapi-swaggered": "^3.1.0",
+    "jest": "^25.2.0",
+    "log4js": "^6.1.2",
+    "node-polyglot": "^2.4.0",
+    "object-hash": "^2.0.3",
+    "redis": "^3.0.2"
+  }
+}
