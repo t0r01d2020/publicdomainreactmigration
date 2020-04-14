@@ -10,7 +10,7 @@ import store from './redux/appstore';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
-import App from './components/App';
+import App from './components/__examples__/App';
 
 ReactDOM.render(
     <Provider store={store}>

@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from '../logo.svg';
+import logo from '../../logo.svg';
 import './App.scss';
 import { Button, Badge } from 'reactstrap';
-import ProgressExample  from './ProgressExample'
-import BootstrapDefaultDropdown from './BootstrapDefaultDropdown'
-import AClassBasedComponent from './AClassBasedComponent'
+import ProgressExample  from './ProgressExample';
+import BootstrapDefaultDropdown from './BootstrapDefaultDropdown';
+import AClassBasedComponent from './AClassBasedComponent';
 
 import DadJoke from './dadJoke/dadJoke';
 import UserInfo from './userInfo/userInfo';

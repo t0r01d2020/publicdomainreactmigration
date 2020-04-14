@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import { Button } from 'reactstrap';
 
-import * as actions from '../../redux/actions';
+import * as actions from '../../../redux/actions';
 
 import './userinfo.scss';
 

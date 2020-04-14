@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux';
 
 import { Button } from 'reactstrap';
 
-import * as actions from '../../redux/actions';
+import * as actions from '../../../redux/actions';
 
-import imageSrc from '../../assets/images/homer-simpson.jpg';
+import imageSrc from '../../../assets/images/homer-simpson.jpg';
 
 import './dad.scss';
 
