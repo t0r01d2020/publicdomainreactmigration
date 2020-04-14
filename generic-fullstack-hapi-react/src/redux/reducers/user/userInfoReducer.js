@@ -21,7 +21,7 @@ const userInfoReducer = ( state = initialState, action = {payload:{}} ) => {
     let actionType = ( action && action.type ) || 'default';
     let responseData = action.payload || {};
 
-    console.log(`dadJokeReducer >> ${actionType}`);
+    console.log(`userInfoReducer >> ${actionType}`);
     console.log(action.payload);
 
     switch (actionType) {
