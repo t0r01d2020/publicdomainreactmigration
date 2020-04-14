@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import AClassBasedComponent from '../components/AClassBasedComponent';
-import BootstrapDefaultDropdown from '../components/BootstrapDefaultDropdown';
+import AClassBasedComponent from '../../../components/__examples__/AClassBasedComponent';
+import BootstrapDefaultDropdown from '../../../components/__examples__/BootstrapDefaultDropdown';
 
 
 //Some Unit Tests of some of our components:

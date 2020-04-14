@@ -8,7 +8,7 @@ import * as actions from '../../../redux/actions';
 
 import './userinfo.scss';
 
-const userInfo = props => {
+const UserInfo = props => {
 
   const getUserInfo = e => {
     e.preventDefault();
@@ -87,5 +87,5 @@ const mapStateToProps = state => {
   };
 }
 
-export { userInfo };
-export default connect(mapStateToProps, mapDispatchToProps)(userInfo);
+export { UserInfo };
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
