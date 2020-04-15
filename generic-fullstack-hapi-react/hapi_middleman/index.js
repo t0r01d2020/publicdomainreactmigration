@@ -30,7 +30,7 @@ const RedisProvider = require('./providers/RedisProvider');
 const config = require('./config/configProvider').config();
 
 // custom provider for Bell
-Bell.providers['oidcOGProvider'] = require('./authProviders/oidcProvider');
+Bell.providers['oidcOGProvider'] = require('./providers/oidcProvider');
 
 // api providers (actually will most likely be embedded in various routes)
 const { 

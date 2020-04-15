@@ -88,9 +88,9 @@ and if not, the /__logs  directory.
 
        -- /config  dir for configuration-related modules and code
 
-       -- /providers dir for Providers
+       -- /providers dir for Providers, including the oidcProvider and RedisProvider
 
-       -- /authProviders contains the oidcProvider
+       
 
        -- /apiProviders will contain each of the providers used to aggregate      REST requests to th e microservices, ultimately. Currently contains one example apiProvider.
           This dir will ultimately also contain the BaseApiProvider...which will wrap shared, common
