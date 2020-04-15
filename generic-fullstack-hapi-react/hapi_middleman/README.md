@@ -1,4 +1,4 @@
-1. Configuration:
+### 1. Configuration:  ###
 
 The middleman Hapi server is configurable through Environment Variables, which can be SET on the host platform,
 or hardcoded by supplying a .env file (textfile). Middleman uses the dotenv library, which reads environment variables 
@@ -34,19 +34,22 @@ SESSION_COOKIENAME=<session cookie name>
 
 The .env file is specific to the host platform you are running it on.
 Therefore, the values may differ on each host. 
-## Advice for your .env file:
-   1. no whitespaces surround the '=' symbol 
-   2. Surrounding the keys or the values in quotation marks (single or double) is not advised. Single quotes
+### Advice for your .env file:  ###
+   -1. no whitespaces surround the '=' symbol 
+   -2. Surrounding the keys or the values in quotation marks (single or double) is not advised. Single quotes
    are known to cause a bug in parsing. They are unnecessary. For the apostrophe character, consider substituting
    the HTML entity reference for it (&apos;). There is some evidence that double quotes may be safe, if necessary.
-   3. Maintain the secrecy of the OIDC-related env var values
+   -3. Maintain the secrecy of the OIDC-related env var values
 
 
 Our Middleman Server now logs the details of every REST request it receives. It logs both to STDOUT (i.e.: the console when run localhost),
 and to log files. The log files are created in the logging directory, which is the path defined in the env var
 named 'middleman_logging_dir', and if not, the /__logs  directory.
 
-2. Launching Middleman:
+
+
+
+### 2. Launching Middleman:###
 
  - The first time the hapi_middleman is cloned from the git repository, and any time you change its dependencies 
  defined in package.json, you should redownload the node_modules, using the command:
@@ -60,13 +63,13 @@ named 'middleman_logging_dir', and if not, the /__logs  directory.
  - To launch the middleman, issue this command: node index.json
 
 
-3. Key routes currently served by Hapi_Middleman:
+### 3. Key routes currently served by Hapi_Middleman: ###
 
-     /login   :  HTTP GET    The key route for User OAuth signin: accessed through a browser, the OAuth flow will begin, and
+    - /login   :  HTTP GET    The key route for User OAuth signin: accessed through a browser, the OAuth flow will begin, and
                  the User will be redirected to a login page for CWP, enters their CWP credentials, and the OAuth flow then completes,
                  with the access token cached into Redis.   
 
-     /{contextPath}/user :  HTTP GET    only a proof-of-concept Route, where one can GET the User's firstname, lastname,
+    -  /{contextPath}/user :  HTTP GET    only a proof-of-concept Route, where one can GET the User's firstname, lastname,
                             and email (profile info)               
 
 
