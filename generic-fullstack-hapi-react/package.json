@@ -40,11 +40,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "middleman":"node ./hapi_middleman/index.js",
-    "redis": "ttab redis-server /usr/local/etc/redis.conf",
-    "runningMiddleman": "ttab yarn middleman",
-    "server": "yarn redis && yarn runningMiddleman"
+    "redis":"redis-server /usr/local/etc/redis.conf",
+    "newTabAndRedis": "ttab yarn redis",
+    "newTabAndMiddleman": "ttab yarn middleman",
+    "server": "yarn newTabAndRedis && yarn newTabAndMiddleman"
   },
   "eslintConfig": {
     "extends": "react-app"
