@@ -77,7 +77,28 @@ and if not, the /__logs  directory.
     with the access token cached into Redis.   
 
     | /{contextPath}/user | HTTP GET | only a proof-of-concept Route, where one can GET the User's firstname, lastname,
-                            and email (profile info)               
+                            and email (profile info)     
+
+
+ # 4. Middleman Project Organization:
+
+   -- /
+       -- index.js the target runnable, main starting point for hapi server
+          startup and behavior.  
+
+       -- /config  dir for configuration-related modules and code
+
+       -- /providers dir for Providers
+
+       -- /authProviders contains the oidcProvider
+
+       -- /apiProviders will contain each of the providers used to aggregate      REST requests to th e microservices, ultimately. Currently contains one example apiProvider.
+          This dir will ultimately also contain the BaseApiProvider...which will wrap shared, common
+          functionality used for all API requests, and that each specific app ApiProvider will delegate to.
+
+       -- .gitignore  this file is used by git to determine which files to ignore from commits and pushes.
+
+
 
 
 
