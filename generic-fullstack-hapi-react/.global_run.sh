@@ -3,11 +3,14 @@
 echo "executing .global_run script..."
 echo "Launches redis, then hapi-middleman, then the frontend React app..."
 echo "  "
-echo "Launching Redis in separate terminal..."
-nohup redis-server &
-echo "First, launching the middleman..."
+echo "Launching Redis in separate process..."
+redis-server /usr/local/etc/redis.conf &
+
+
+
+echo "First, launching the middleman in a separate process..."
 echo "###########################################################################################"
-nohup node hapi_middleman/index.js &
+ttab node hapi_middleman/index.js &
 echo "  "
 echo "  "
 echo "Now, launching frontend..."
