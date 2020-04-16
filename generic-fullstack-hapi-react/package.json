@@ -40,7 +40,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "middleman":"node ./hapi_middleman/index.js",
+    "run": "./.global_run.sh",
     "redis":"redis-server /usr/local/etc/redis.conf",
     "newTabAndRedis": "ttab yarn redis",
     "newTabAndMiddleman": "ttab yarn middleman",
