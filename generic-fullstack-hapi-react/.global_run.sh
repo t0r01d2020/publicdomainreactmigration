@@ -1,10 +1,13 @@
 #! /bin/bash
 
 echo "executing .global_run script..."
-
+echo "Launches redis, then hapi-middleman, then the frontend React app..."
+echo "  "
+echo "Launching Redis in separate terminal..."
+nohup redis-server &
 echo "First, launching the middleman..."
 echo "###########################################################################################"
-node hapi_middleman/index.js
+nohup node hapi_middleman/index.js &
 echo "  "
 echo "  "
 echo "Now, launching frontend..."
