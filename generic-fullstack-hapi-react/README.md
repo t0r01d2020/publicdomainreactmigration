@@ -8,7 +8,7 @@ _This project was initially setup with the following._
 
 _System:_
 - Mac OS Sierra (Version 10.12.6), 
-- Supported Windows version?
+- Windows 10
 
 _Development Dependencies:_
 - Homebrew 2.2.12 (mac only), 
