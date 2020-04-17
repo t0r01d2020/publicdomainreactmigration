@@ -83,6 +83,7 @@ const serverOptions = {
   port: config.DEPLOYMENT_PORT,
   // required for Inert plugin static content
   routes: {
+    cors: true,
     files: {
       relativeTo: Path.join(__dirname, static_content_path)
     }
