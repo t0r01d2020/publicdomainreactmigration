@@ -40,7 +40,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "run": "./.global_run.sh",
+    "all": "./.global_run.sh",
     "redis":"redis-server /usr/local/etc/redis.conf",
     "newTabAndRedis": "ttab yarn redis",
     "newTabAndMiddleman": "ttab yarn middleman",
@@ -61,5 +61,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:8000"
 }
